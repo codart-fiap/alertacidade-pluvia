@@ -2,6 +2,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -23,7 +25,7 @@ import java.util.regex.Pattern;
  *   java src/main/java/SimuladorSensores.java http://localhost:8080 5 60
  * rodadas = 0 (padrao) roda ate ser interrompido com Ctrl+C.
  *
- * Chave: variável DEVICE_KEY opcional; sem ela usa a chave de demonstração local da API.
+ * A chave é lida de DEVICE_KEY no ambiente ou do .env local, igual à configuração da API.
  */
 public class SimuladorSensores {
 
@@ -43,7 +45,7 @@ public class SimuladorSensores {
         baseUrl = args.length > 0 ? args[0] : "http://localhost:8080";
         int intervaloSegundos = args.length > 1 ? Integer.parseInt(args[1]) : 5;
         int rodadas = args.length > 2 ? Integer.parseInt(args[2]) : 0;
-        chave = System.getenv().getOrDefault("DEVICE_KEY", "pluvia-chave-dispositivo-dev-123");
+        chave = carregarDeviceKey();
 
         List<SensorSimulado> sensores = listarSensores();
         if (sensores.isEmpty()) {
@@ -66,6 +68,29 @@ public class SimuladorSensores {
             }
             Thread.sleep(intervaloSegundos * 1000L);
         }
+    }
+
+    private static String carregarDeviceKey() {
+        String valorAmbiente = System.getenv("DEVICE_KEY");
+        if (valorAmbiente != null && !valorAmbiente.isBlank()) {
+            return valorAmbiente.trim();
+        }
+
+        try (var linhas = Files.lines(Path.of(".env"))) {
+            String valorArquivo = linhas.map(String::trim)
+                    .filter(linha -> linha.startsWith("DEVICE_KEY="))
+                    .map(linha -> linha.substring("DEVICE_KEY=".length()).trim())
+                    .findFirst().orElse("");
+            if (!valorArquivo.isBlank()) {
+                if (valorArquivo.length() >= 2 && valorArquivo.startsWith("\"") && valorArquivo.endsWith("\"")) {
+                    return valorArquivo.substring(1, valorArquivo.length() - 1);
+                }
+                return valorArquivo;
+            }
+        } catch (java.io.IOException ignored) {
+            // Se não houver .env, usa a chave de demonstração local abaixo.
+        }
+        return "pluvia-chave-dispositivo-dev-123";
     }
 
     /** Tendencia de subida com ruido; quando passa muito do limite, "baixa a mare" e recomeca. */
