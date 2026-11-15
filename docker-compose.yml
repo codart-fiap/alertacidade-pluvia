@@ -1,0 +1,16 @@
+# Sobe um PostgreSQL local para desenvolvimento: docker compose up -d
+services:
+  postgres:
+    image: postgres:16
+    container_name: pluvia-db
+    environment:
+      POSTGRES_DB: pluvia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pluvia_data:/var/lib/postgresql/data
+
+volumes:
+  pluvia_data:

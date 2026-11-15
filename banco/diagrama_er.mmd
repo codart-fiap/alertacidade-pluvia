@@ -1,0 +1,54 @@
+---
+title: Pluvia - Diagrama ER (PostgreSQL)
+---
+erDiagram
+    AREA_RISCO ||--o{ SENSOR : "possui"
+    SENSOR ||--o{ LEITURA_SENSOR : "envia"
+    LEITURA_SENSOR ||--o| ALERTA : "gera"
+
+    USUARIO {
+        bigint id PK
+        varchar(100) nome
+        varchar(150) email UK
+        varchar(255) senha_hash
+        varchar(20) perfil "ADMIN ou CIDADAO"
+    }
+
+    AREA_RISCO {
+        bigint id PK
+        varchar(120) nome
+        double latitude
+        double longitude
+        double raio_metros
+        varchar(10) nivel_risco "BAIXO, MEDIO ou ALTO"
+        boolean ativa
+    }
+
+    SENSOR {
+        bigint id PK
+        varchar(120) nome
+        varchar(20) tipo "NIVEL_RIO ou CHUVA"
+        bigint area_risco_id FK
+        double limite_alerta
+    }
+
+    LEITURA_SENSOR {
+        bigint id PK
+        bigint sensor_id FK
+        double valor
+        timestamp data_hora
+    }
+
+    ALERTA {
+        bigint id PK
+        bigint leitura_id FK, UK
+        varchar(10) nivel "BAIXO, MEDIO ou ALTO"
+        varchar(255) mensagem
+    }
+
+    PONTO_SEGURO {
+        bigint id PK
+        varchar(120) nome
+        double latitude
+        double longitude
+    }
