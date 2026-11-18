@@ -4,11 +4,15 @@ Global Solution 2026/2 (FIAP) · tema **CitizenTech**.
 
 O **Pluvia** avisa o cidadão sobre áreas com risco de enchente: o app recebe o alerta, mostra no mapa a área de risco destacada, e ao tocar em "Minha localização" a pessoa recebe um relatório personalizado dizendo se está dentro ou perto da área e para onde ir.
 
-Este repositório contém as partes **API RESTful**, **Segurança** e **Simulação de IoT**. O banco (PostgreSQL) e o app mobile são entregues pelos outros integrantes do grupo, e o app consome esta API.
+Este repositório contém as partes **API RESTful**, **Segurança** e **Simulação de IoT**. O banco (PostgreSQL) e a parte do front mobile está no reositório alertacidade apenas, o front mobile consome esta API.
 
 ## Integrantes
 
-> Preencher: nome de cada integrante e RM (os mesmos do `.txt` da entrega).
+- RM558627 - VINICIUS HENRIQUE DA SILVA
+- RM555140 -  VITOR APOLINARIO SGOBI
+- RM556915 -  LUCAS MORAES DAVANÇO
+- RM555096 - HUGO CARVALHO DE SOUZA
+- RM557606 - João Gabriel Garcia Moreno
 
 ## Requisitos
 
@@ -63,7 +67,7 @@ Ou pelo IntelliJ: abra esta pasta (**File → Open**), aguarde a importação do
 A API sobe em `http://localhost:8080`.
 
 - **Swagger (documentação interativa):** http://localhost:8080/swagger-ui.html. Faça `POST /auth/login`, copie o `token` e clique em **Authorize**.
-- **Postman:** importe `docs/Pluvia.postman_collection.json`, preencha as variáveis locais `adminEmail` e `adminPassword`, rode **Login ADMIN** (o token é salvo sozinho) e use as demais requisições.
+
 
 ### 3. Simulador de sensores
 
@@ -150,7 +154,7 @@ Entidades (tabelas): `usuario`, `area_risco`, `sensor`, `leitura_sensor`, `alert
 | Login seguro | Senha armazenada com **BCrypt** (`BCryptPasswordEncoder`); nunca em texto puro nem devolvida pela API. Login devolve **JWT** assinado (HMAC-SHA) com expiração de 120 min. |
 | Controle de acesso | Perfis `ADMIN` e `DISPOSITIVO` (sensores). Cidadão só faz leituras (GET); POST/PUT/DELETE exigem ADMIN (`SecurityConfig`); o dispositivo só pode enviar leituras.|
 | Boas práticas | (1) **Validação de entrada** com Bean Validation (`@Valid`, `@NotBlank`, `@Email`, faixas de latitude/longitude); (2) **proteção contra SQL Injection**: acesso ao banco só por JPA/Spring Data com parâmetros, sem concatenar SQL; (3) **hash de senha** com BCrypt; (4) **tratamento global de erros** que não vaza stack trace nem detalhes internos; (5) **sessão stateless** com token, sem cookies (por isso CSRF desabilitado); (6) **chave de dispositivo** para os sensores, comparada em tempo constante, sem guardar login de administrador no dispositivo; (7) segredos carregados de variáveis de ambiente ou do `.env` local ignorado pelo Git. |
-| XSS | A API só devolve JSON (não renderiza HTML) e o app mobile não interpreta HTML, então o risco é baixo; a validação de entrada também limita tamanho e formato dos campos. |
+| XSS | A API só devolve JSON (não renderiza HTML) e o front mobile não interpreta HTML, então o risco é baixo; a validação de entrada também limita tamanho e formato dos campos. |
 
 ## Parte 6 — Simulação de IoT
 
