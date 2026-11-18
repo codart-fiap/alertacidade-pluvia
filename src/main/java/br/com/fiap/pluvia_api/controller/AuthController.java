@@ -24,11 +24,7 @@ public class AuthController {
         this.service = service;
     }
 
-    @Operation(summary = "Cadastra um novo cidadão (perfil CIDADAO)")
-    @PostMapping("/registro")
-    public ResponseEntity<UsuarioResponse> registrar(@Valid @RequestBody RegistroRequest req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.registrar(req));
-    }
+
 
     @Operation(summary = "Autentica e devolve o token JWT")
     @PostMapping("/login")

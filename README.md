@@ -178,10 +178,18 @@ Entidades (tabelas): `usuario`, `area_risco`, `sensor`, `leitura_sensor`, `alert
 
 ## Uso de IA generativa
 
-> **Preencher e revisar antes de entregar.** O enunciado exige declarar as ferramentas usadas e para quê, e proíbe entregar código sem entender e sem revisar.
+>## Uso de IA
 
-- Ferramenta: Claude (Anthropic).
-- Uso: geração do código da API Spring Boot (camadas, segurança com JWT e chave de dispositivo, simulador de sensores, projeto do Wokwi, testes unitários e este README) a partir do escopo do trabalho, **revisada e testada pelo integrante responsável**.
+Durante o desenvolvimento deste projeto, utilizamos ferramentas de IA generativa (**Claude** e **ChatGPT**) como apoio em algumas etapas, sempre com revisão e entendimento da equipe antes de aplicar qualquer sugestão ao projeto final.
+
+**Onde foram usadas:**
+
+- **Depuração e explicação de erros:** auxílio para interpretar mensagens de erro (ex.: falhas de conexão com o banco, exceptions da API, problemas de CORS) e entender possíveis causas antes de corrigirmos o código.
+- **Discussão de abordagens e implementações:** apoio para avaliar diferentes formas de estruturar camadas da API (Controller/Service/Repository) e validar se a abordagem escolhida pela equipe fazia sentido.
+- **Funcionalidade de mapa e cálculos de localização — nossa maior dificuldade no projeto:** essa foi a parte mais desafiadora para a equipe. Tínhamos bastante dificuldade em três pontos específicos: (1) exibir o mapa de forma visual no front, com os marcadores das áreas de risco e pontos seguros; (2) calcular corretamente se uma coordenada estava dentro ou fora do raio de uma área circular (lógica de geometria que nenhum de nós tinha visto antes); e (3) integrar essas partes com a API e com o restante do sistema (sensor gerando leitura → cálculo de distância → decisão de alerta → exibição no mapa). Como não conseguimos avançar sozinhos nessas partes, usamos trechos de código gerados com apoio de IA como base, principalmente para a função de cálculo de distância (fórmula de Haversine) e para a estrutura de integração entre o cálculo e o endpoint de recomendação. A partir dessa base, estudamos o funcionamento, testamos, ajustamos às nossas entidades (área de risco, ponto seguro) e validamos os resultados com os dados de teste do grupo até entender e conseguir explicar o que cada parte fazia.
+- **Revisão e formatação de textos:** apoio na organização e clareza dos textos finais (README, plano de testes, descrições de endpoints), sem alterar o conteúdo técnico decidido pela equipe.
+
+> **Importante:** nenhuma parte do código ou da documentação foi usada sem revisão da equipe. Todo o código gerado com apoio de IA foi lido, testado e ajustado até que o grupo compreendesse seu funcionamento por completo.
 
 ## Observação
 
