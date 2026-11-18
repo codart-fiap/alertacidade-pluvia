@@ -75,15 +75,10 @@ java src/main/java/SimuladorSensores.java http://localhost:8080 5
 
 Defina `DEVICE_KEY` no ambiente deste terminal com o mesmo valor usado pela API (o `.env` não exporta variáveis para o PowerShell). Argumentos opcionais: `[urlBase] [intervaloEmSegundos] [numeroDeRodadas]` (rodadas = 0 roda até `Ctrl+C`). Não precisa instalar nada além do JDK.
 
-### 4. Testes
-
-```bash
-mvn test
-```
 
 ## Usuários
 
-Credenciais de demonstração: `admin@pluvia.com` / `Admin@123`. Cidadãos podem se cadastrar pelo endpoint `/auth/registro`.
+Credenciais de demonstração: `admin@pluvia.com` / `Admin@123`.
 
 Se um banco local existente ainda tiver a antiga conta de demonstração, altere ou remova essa conta no banco; o `DataLoader` não apaga nem troca usuários já existentes automaticamente.
 
@@ -91,7 +86,6 @@ Se um banco local existente ainda tiver a antiga conta de demonstração, altere
 
 | Método | Endpoint | Quem acessa | Descrição |
 |---|---|---|---|
-| POST | `/auth/registro` | público | Cadastra cidadão |
 | POST | `/auth/login` | público | Devolve o token JWT |
 | GET | `/areas-risco` | público | Lista áreas (o app desenha as ativas no mapa) |
 | GET | `/areas-risco/{id}` | público | Busca uma área |
@@ -114,8 +108,8 @@ Códigos de status usados: `200`, `201`, `204`, `400` (dados inválidos), `401` 
 ### Fluxo do app (conforme o wireframe)
 
 1. O app consulta `GET /alertas` periodicamente e mostra a notificação "Alerta Área A".
-2. Ao tocar, a tela de mapa usa `GET /areas-risco` e destaca em vermelho as áreas com `ativa = true` (círculo com `latitude`, `longitude` e `raioMetros`). Pode haver várias.
-3. Ao tocar em "Minha localização", o app chama `GET /recomendacao?lat=..&lng=..` com a posição do aparelho e exibe o campo `mensagem` (dentro da área, próximo da área ou fora) e o `pontoSeguro` mais próximo.
+2. Ao tocar, a tela de mapa usa `GET /areas-risco` e destaca em vermelho as áreas acima do limite (círculo com `latitude`, `longitude` e `raioMetros`). Pode haver várias.
+3. Ao tocar em "Minha localização", o app chama `GET /recomendacao?lat=..&lng=..` com a posição do aparelho e exibe o campo `mensagem` (entrando na área, dentro da área ou fora) e o `pontoSeguro` mais próximo.
 
 ### Como a recomendação é calculada
 
@@ -154,7 +148,7 @@ Entidades (tabelas): `usuario`, `area_risco`, `sensor`, `leitura_sensor`, `alert
 | Item | Como foi feito |
 |---|---|
 | Login seguro | Senha armazenada com **BCrypt** (`BCryptPasswordEncoder`); nunca em texto puro nem devolvida pela API. Login devolve **JWT** assinado (HMAC-SHA) com expiração de 120 min. |
-| Controle de acesso | Perfis `ADMIN` e `CIDADAO` (pessoas) e `DISPOSITIVO` (sensores). Cidadão só faz leituras (GET); POST/PUT/DELETE exigem ADMIN (`SecurityConfig`); o dispositivo só pode enviar leituras. Cadastro público sempre cria `CIDADAO`. |
+| Controle de acesso | Perfis `ADMIN` e `DISPOSITIVO` (sensores). Cidadão só faz leituras (GET); POST/PUT/DELETE exigem ADMIN (`SecurityConfig`); o dispositivo só pode enviar leituras.|
 | Boas práticas | (1) **Validação de entrada** com Bean Validation (`@Valid`, `@NotBlank`, `@Email`, faixas de latitude/longitude); (2) **proteção contra SQL Injection**: acesso ao banco só por JPA/Spring Data com parâmetros, sem concatenar SQL; (3) **hash de senha** com BCrypt; (4) **tratamento global de erros** que não vaza stack trace nem detalhes internos; (5) **sessão stateless** com token, sem cookies (por isso CSRF desabilitado); (6) **chave de dispositivo** para os sensores, comparada em tempo constante, sem guardar login de administrador no dispositivo; (7) segredos carregados de variáveis de ambiente ou do `.env` local ignorado pelo Git. |
 | XSS | A API só devolve JSON (não renderiza HTML) e o app mobile não interpreta HTML, então o risco é baixo; a validação de entrada também limita tamanho e formato dos campos. |
 
@@ -167,7 +161,6 @@ Entidades (tabelas): `usuario`, `area_risco`, `sensor`, `leitura_sensor`, `alert
 
 - Há **4 sensores** simulados (2 por área de risco), cadastrados na carga inicial.
 - **Simulador em Java** (`src/main/java/SimuladorSensores.java`): envia leituras por `POST /sensores/{id}/leituras` a cada poucos segundos, com a chave de dispositivo. Os valores sobem com ruído até passar do limite e depois "baixam", repetindo o ciclo. É a versão que roda só seguindo este README.
-- **Simulação com hardware no Wokwi** (`wokwi/`): um ESP32 com dois potenciômetros (nível do rio e chuva) que envia as mesmas leituras para a API. Passo a passo em `wokwi/LEIAME.md`. Link do projeto no Wokwi: *(colar aqui)*.
 - Gravidade do alerta pela razão `valor / limite`: até 1,2 → `BAIXO`; de 1,2 a 1,5 → `MEDIO`; a partir de 1,5 → `ALTO`.
 - Os alertas ficam em `GET /alertas` e a área passa a aparecer em `GET /areas-risco` com `ativa = true` e o nível atual, que é o que o app mostra. Assim os sensores enviam dados pela API e o app exibe os alertas.
 - Limitação conhecida do MVP: a área só é desativada manualmente (`PUT /areas-risco/{id}` com `ativa: false`).
@@ -176,9 +169,7 @@ Entidades (tabelas): `usuario`, `area_risco`, `sensor`, `leitura_sensor`, `alert
 
 > Colar aqui o link público do vídeo (YouTube, Google Drive ou Vimeo) quando estiver pronto.
 
-## Uso de IA generativa
-
->## Uso de IA
+>## Uso de IA generativa
 
 Durante o desenvolvimento deste projeto, utilizamos ferramentas de IA generativa (**Claude** e **ChatGPT**) como apoio em algumas etapas, sempre com revisão e entendimento da equipe antes de aplicar qualquer sugestão ao projeto final.
 
