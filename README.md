@@ -6,6 +6,14 @@ O **Pluvia** avisa o cidadão sobre áreas com risco de enchente: o app recebe o
 
 Este repositório contém as partes **API RESTful**, **Segurança** e **Simulação de IoT**. O banco (PostgreSQL) e a parte do front mobile está no reositório alertacidade apenas, o front mobile consome esta API.
 
+## Obtenha os projetos
+
+Clone ou baixe os repositórios do front-end (`alertacidade-web`) e do backend (`pluvia-api`). Para conectar os dois localmente, mantenha-os disponíveis na mesma máquina.
+
+Link do repositório do front: https://github.com/codart-fiap/alertacidade
+
+Link do repositório do back/API: https://github.com/codart-fiap/alertacidade-pluvia
+
 ## Integrantes
 
 - RM558627 - VINICIUS HENRIQUE DA SILVA
