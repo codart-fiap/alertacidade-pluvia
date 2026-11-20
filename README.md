@@ -17,7 +17,6 @@ Link do repositório do back/API: https://github.com/codart-fiap/alertacidade-pl
 ## Integrantes
 
 - RM558627 - VINICIUS HENRIQUE DA SILVA
-- RM555140 -  VITOR APOLINARIO SGOBI
 - RM556915 -  LUCAS MORAES DAVANÇO
 - RM555096 - HUGO CARVALHO DE SOUZA
 - RM557606 - João Gabriel Garcia Moreno
@@ -179,7 +178,7 @@ Entidades (tabelas): `usuario`, `area_risco`, `sensor`, `leitura_sensor`, `alert
 
 ## Vídeo pitch
 
-> Colar aqui o link público do vídeo (YouTube, Google Drive ou Vimeo) quando estiver pronto.
+> https://www.youtube.com/watch?v=btL8T8UGqxg
 
 >## Uso de IA generativa
 
